@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Switch Lite Dream</title>
+
+<style>
+
+body{
+    font-family: sans-serif;
+    background:#111827;
+    color:#f3f4f6;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+    margin:0;
+}
+
+.card{
+    background:#1f2937;
+    width:350px;
+    padding:25px;
+    border-radius:25px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.4);
+    text-align:center;
+    border:1px solid #374151;
+}
+
+h1{
+    margin-bottom:5px;
+    color:#e5e7eb;
+}
+
+.goal{
+    color:#60a5fa;
+    font-weight:bold;
+}
+
+.progress-box{
+    background:#374151;
+    height:25px;
+    border-radius:20px;
+    overflow:hidden;
+    margin:20px 0;
+}
+
+.progress{
+    height:100%;
+    width:0%;
+    background:#3b82f6;
+    transition:0.3s;
+}
+
+input{
+    width:80%;
+    padding:12px;
+    border-radius:15px;
+    border:none;
+    background:#111827;
+    color:white;
+    font-size:16px;
+    outline:none;
+}
+
+button{
+    margin-top:15px;
+    padding:12px 20px;
+    border:none;
+    border-radius:15px;
+    background:#2563eb;
+    color:white;
+    font-size:16px;
+    cursor:pointer;
+    transition:0.2s;
+}
+
+button:hover{
+    transform:scale(1.03);
+}
+
+.money{
+    font-size:28px;
+    margin:10px 0;
+    font-weight:bold;
+    color:#93c5fd;
+}
+
+.small{
+    color:#9ca3af;
+    margin-top:10px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="card">
+
+    <h1>🎮 Switch Lite Dream</h1>
+
+    <div class="goal">
+        เป้าหมาย: 4,890 บาท
+    </div>
+
+    <div class="money" id="money">
+        0 บาท
+    </div>
+
+    <div class="progress-box">
+        <div class="progress" id="progress"></div>
+    </div>
+
+    <p id="percent">0%</p>
+
+    <input type="number" id="inputMoney" placeholder="ใส่จำนวนเงิน">
+
+    <br>
+
+    <button onclick="addMoney()">
+        เพิ่มเงิน 💾
+    </button>
+
+    <br>
+
+    <button onclick="resetMoney()">
+        รีเซ็ต 🔄
+    </button>
+
+    <div class="small" id="left">
+        เหลืออีก 4,890 บาท
+    </div>
+
+</div>
+
+<script>
+
+const goal = 4890;
+
+let saved = localStorage.getItem("savedMoney");
+
+if(saved === null){
+    saved = 0;
+}else{
+    saved = parseInt(saved);
+}
+
+updateUI();
+
+function addMoney(){
+
+    let input = document.getElementById("inputMoney");
+
+    let value = parseInt(input.value);
+
+    if(isNaN(value) || value <= 0){
+        alert("ใส่จำนวนเงินก่อนนะ");
+        return;
+    }
+
+    saved += value;
+
+    localStorage.setItem("savedMoney", saved);
+
+    updateUI();
+
+    input.value = "";
+}
+
+function resetMoney(){
+
+    let confirmReset = confirm("รีเซ็ตเงินทั้งหมดไหม?");
+
+    if(confirmReset){
+
+        saved = 0;
+
+        localStorage.setItem("savedMoney", saved);
+
+        updateUI();
+    }
+}
+
+function updateUI(){
+
+    document.getElementById("money").innerText =
+        saved + " บาท";
+
+    let percent = (saved / goal) * 100;
+
+    if(percent > 100){
+        percent = 100;
+    }
+
+    document.getElementById("progress").style.width =
+        percent + "%";
+
+    document.getElementById("percent").innerText =
+        percent.toFixed(1) + "%";
+
+    let left = goal - saved;
+
+    if(left < 0){
+        left = 0;
+    }
+
+    document.getElementById("left").innerText =
+        "เหลืออีก " + left + " บาท";
+
+    if(saved >= goal){
+
+        document.getElementById("left").innerText =
+            "🎉 เก็บครบแล้ว! ถึงฝันของเฟรมแล้ว";
+
+    }
+}
+
+</script>
+
+</body>
+</html>
